@@ -1,0 +1,16 @@
+/model/
+/data/
+/save/
+/.idea/
+test.py
+/*.txt
+/draw.py
+/*.png
+/matrix_process.py
+/matrix*
+super_glue.py
+cov
+*.sa*
+*.sh
+/result/
+*.xlsx
