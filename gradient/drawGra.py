@@ -9,16 +9,17 @@ matplotlib.rcParams['pdf.fonttype'] = 42
 
 # plt.rcParams['font.family'] = 'SimHei'
 
-models = ['distilbert-base-multilingual-cased_1.pt', 'roberta-large_1.pt', 'llama-2-7B_1.pt']
+models = ['distilbert-base-multilingual-cased_1.pt', 'roberta-large_1.pt']
 markevery = 15
-fig, axs = plt.subplots(1, 3, figsize=(10, 3))
+fig, axs = plt.subplots(1, 2, figsize=(7, 3))
 for i, model in enumerate(models):
     name_grad = torch.load(model)
     idx = 0
     for k, v in name_grad.items():
         if idx == 1:
-            lora_A = v
-            result = torch.norm(lora_A, dim=idx) ** 2
+            print(k)
+            lora = v
+            result = torch.norm(lora, dim=idx) ** 2
             # # result = lora_B @ lora_A
             result, _ = torch.sort(result.view(-1).abs(), descending=True)
             x = range(1, result.numel()+1)
@@ -41,9 +42,11 @@ for i, model in enumerate(models):
             axs[i].plot(x, log(x, logt[0], logt[1]), label='fitted by log', linestyle='--', marker='.', markevery=int(result.numel() / markevery))
             expt, _ = curve_fit(exp, x.numpy(), result.numpy())
             axs[i].plot(x, exp(x, expt[0]), label='fitted by exp', linestyle='--', marker='*', markevery=int(result.numel() / markevery))
-            axs[i].legend(loc='best')
+            # axs[i].legend(loc='best')
             axs[i].set_xlabel('rank ID', size=12)
             axs[i].set_ylabel('value', size=12)
+            if i == 0:
+                axs[i].legend(bbox_to_anchor=(0, 1.07), loc=6, ncol=6, borderaxespad=0)
             # axs[i].set_title("low-rank matrix $\mathbf{A}$", y=-0.3)
             break
         # else:
